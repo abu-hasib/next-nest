@@ -20,3 +20,13 @@ model User {
   isAdmin      Boolean  @default(true) @map("is_admin")
   createdAt    DateTime @default(now()) @map("created_at")
 }
+
+model Appointment {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String
+  appointmentDateTime DateTime @map("appointment_date_time")
+  notes               String?  
+  googleEventId       String?  @map("google_event_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+}

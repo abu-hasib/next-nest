@@ -9,6 +9,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() dto: CreateUserDto): Promise<User> {
     return await this.userService.create(dto);
   }

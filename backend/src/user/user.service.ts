@@ -1,6 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import bcrypt from 'bcryptjs';
@@ -10,6 +13,12 @@ import { Prisma } from 'src/generated/prisma/client';
 export class UserService {
   constructor(private prisma: PrismaService) {}
   async create(dto: CreateUserDto): Promise<User> {
+    if (!dto || Object.keys(dto).length === 0) {
+      throw new BadRequestException('Request body is empty');
+    }
+    if (!dto.email || !dto.password) {
+      throw new BadRequestException('Email and password are required');
+    }
     const existing = await this.prisma.user?.findUnique({
       where: { email: dto.email },
     });
@@ -40,12 +49,4 @@ export class UserService {
       orderBy: { createdAt: 'desc' },
     });
   }
-
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
 }

@@ -23,4 +23,4 @@ COPY --from=builder /app/prisma ./prisma
 RUN ls -al
 ENV NODE_ENV=production
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]

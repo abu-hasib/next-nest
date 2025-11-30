@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 RUN npx prisma generate
 RUN npm run build
-
+RUN echo ls
 # STAGE 2: Production image
 FROM node:20-alpine
 WORKDIR /app
@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
-
+RUN echo ls
 ENV NODE_ENV=production
 
 CMD ["node", "dist/main.js"]

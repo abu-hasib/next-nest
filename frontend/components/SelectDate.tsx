@@ -14,13 +14,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { FormField, FormItem, FormLabel } from "./ui/form";
-import { UseFormReturn } from "react-hook-form";
+import { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 
-type SelectDateProps = {
+type SelectDateProps<T extends FieldValues> = {
   type: string;
   label: string;
-  id: string;
-  form: UseFormReturn;
+  id: Path<T>;
+  form: UseFormReturn<T>;
 };
 
 function formatDate(date: Date | undefined) {
@@ -35,12 +35,12 @@ function formatDate(date: Date | undefined) {
   });
 }
 
-export function SelectDate({
+export function SelectDate<T extends FieldValues>({
   type = "text",
   label = "",
   id,
   form,
-}: SelectDateProps) {
+}: SelectDateProps<T>) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("In 2 days");
   const [date, setDate] = React.useState<Date | undefined>(
@@ -70,7 +70,6 @@ export function SelectDate({
                     setDate(date);
                     setMonth(date);
                   }
-                  form.setValue("appointmentDateTime", date);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "ArrowDown") {
@@ -104,7 +103,10 @@ export function SelectDate({
                       setDate(date);
                       setValue(formatDate(date));
                       setOpen(false);
-                      form.setValue("appointmentDateTime", date);
+                      form.setValue(
+                        id,
+                        date as unknown as PathValue<T, typeof id>
+                      );
                     }}
                   />
                 </PopoverContent>
